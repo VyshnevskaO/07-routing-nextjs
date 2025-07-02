@@ -1,0 +1,79 @@
+import axios from "axios";
+import type { Note } from "../types/note";
+
+interface FetchNotesProps {
+    page: number;
+    query?: string;
+}
+
+interface FetchNotesResponse {
+    notes: Note[];
+    totalPages: number;
+}
+
+interface CreateNoteProps {
+  title: string;
+  content?: string;
+  tag: string;
+}
+
+
+
+const API_KEY = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN as string;
+
+export const fetchNotes = async ({ page, query }: FetchNotesProps): Promise<FetchNotesResponse> => {
+    const url = new URL("https://notehub-public.goit.study/api/notes");
+
+    url.searchParams.append("page", `${page}`);
+    url.searchParams.append("perPage", "12");
+   
+    if (query) {
+      url.searchParams.append("search", query);
+    }
+  
+    const res = await axios.get<FetchNotesResponse>(`${url}`, {
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+      },
+    });
+  
+    return res.data;
+};
+  
+
+export const createNote = async ({ title, content, tag }: CreateNoteProps): Promise<Note> => {
+  const res = await axios.post<Note>(
+    "https://notehub-public.goit.study/api/notes",
+    {
+      title,
+      content,
+      tag,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return res.data;
+};
+
+
+export const deleteNote = async (id: number): Promise<Note> => {
+  const res = await axios.delete<Note>(`https://notehub-public.goit.study/api/notes/${id}`, {
+    headers: {
+      Authorization: `Bearer ${API_KEY}`,
+    },
+  });
+  return res.data;
+};
+
+export const fetchNoteById = async (id: number):Promise<Note> => {
+  const res = await axios<Note>(`https://notehub-public.goit.study/api/notes/${id}`, {
+    headers: {
+      Authorization: `Bearer ${API_KEY}`,
+    },
+  });
+  return res.data;
+}
