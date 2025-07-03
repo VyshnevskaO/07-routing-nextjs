@@ -3,12 +3,14 @@ import type { Note } from "../types/note";
 
 interface FetchNotesProps {
     page: number;
-    query?: string;
+  query?: string;
+  category?: string;
 }
 
 interface FetchNotesResponse {
-    notes: Note[];
-    totalPages: number;
+  notes: Note[];
+  totalPages: number;
+
 }
 
 interface CreateNoteProps {
@@ -19,16 +21,21 @@ interface CreateNoteProps {
 
 
 
+
 const API_KEY = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN as string;
 
-export const fetchNotes = async ({ page, query }: FetchNotesProps): Promise<FetchNotesResponse> => {
-    const url = new URL("https://notehub-public.goit.study/api/notes");
+export const fetchNotes = async ({ page, query, category }: FetchNotesProps): Promise<FetchNotesResponse> => {
+  const url = new URL("https://notehub-public.goit.study/api/notes");
 
     url.searchParams.append("page", `${page}`);
     url.searchParams.append("perPage", "12");
    
     if (query) {
       url.searchParams.append("search", query);
+    }
+
+    if (category) {
+      url.searchParams.append("tag", `${category}`);
     }
   
     const res = await axios.get<FetchNotesResponse>(`${url}`, {

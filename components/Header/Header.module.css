@@ -35,3 +35,13 @@
 .navigation li a:hover {
   color: #ddd;
 }
+
+.menuContainer {
+  position: relative;
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+
+}

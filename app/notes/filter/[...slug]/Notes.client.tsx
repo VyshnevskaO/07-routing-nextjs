@@ -5,7 +5,7 @@ import { useState } from "react"
 import { useDebounce } from "use-debounce" 
 
 import { fetchNotes } from "@/lib/api"
-import NoteModal from "@/components/NoteModal/NoteModal"
+import Modal from "@/components/Modal/Modal"
 import SearchBox from "@/components/SearchBox/SearchBox"
 import Pagination from "@/components/Pagination/Pagination"
 import NoteList from "@/components/NoteList/NoteList"
@@ -49,7 +49,7 @@ export default function NotesClient({initialData}:NotesClientProps) {
         <SearchBox value={searchQuery} onChange={handleInputChange} />
         {totalPages > 1 && <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />}
         <button className={css.button} onClick={openModal}>Create note +</button>
-        {isModalOpen && <NoteModal onClose={closeModal} />}
+        {isModalOpen && <Modal onClose={closeModal} />}
       </header>
       {data?.notes && data.notes.length > 0 && <NoteList notes={data.notes} />}
       </>

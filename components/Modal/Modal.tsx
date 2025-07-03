@@ -1,26 +1,37 @@
-import css from "./NoteModal.module.css"
+import css from "./Modal.module.css"
 import { createPortal } from "react-dom"
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import NoteForm from "../NoteForm/NoteForm";
+import { useRouter } from "next/router";
 
 
-interface NoteModalProps {
-    onClose: () => void;
+interface ModalProps {
+    onClose?: () => void;
+    children?:React.ReactNode;
   }
 
 
-export default function NoteModal({ onClose }: NoteModalProps) {
-    
+export default function Modal({ onClose, children }: ModalProps) {
+  const router = useRouter();
+
+  const close = useCallback(() => {
+    if (onClose) {
+      onClose();
+    } else {
+      router.back();
+    }
+  }, [onClose, router]);
+
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
         if (event.target === event.currentTarget) {
-          onClose();
+          close();
         }
 };
     
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        onClose();
+        close();
       }
     };
       document.addEventListener("keydown", handleKeyDown);
@@ -29,10 +40,7 @@ export default function NoteModal({ onClose }: NoteModalProps) {
         document.removeEventListener("keydown", handleKeyDown);
         document.body.style.overflow = "";
     };
-  }, [onClose]);
-    
-
-
+  }, [close]);
 
     return createPortal(
         <div
@@ -41,9 +49,19 @@ export default function NoteModal({ onClose }: NoteModalProps) {
             aria-modal="true"
             onClick={handleBackdropClick}>
             <div className={css.modal}>
-                <NoteForm onClose={()=> onClose()} />
+              {onClose? (
+              <NoteForm onClose={()=> close()} />
+              ):(<>{children}
+             <button onClick={close}>Close</button>
+              </>
+                  
+              )}
+               
             </div>
         </div>,
         document.body
     );
+  
+
+
 }
