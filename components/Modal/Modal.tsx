@@ -1,8 +1,10 @@
+'use client'
 import css from "./Modal.module.css"
 import { createPortal } from "react-dom"
 import { useCallback, useEffect } from "react";
 import NoteForm from "../NoteForm/NoteForm";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+
 
 
 interface ModalProps {
@@ -14,13 +16,13 @@ interface ModalProps {
 export default function Modal({ onClose, children }: ModalProps) {
   const router = useRouter();
 
-  const close = useCallback(() => {
-    if (onClose) {
-      onClose();
-    } else {
-      router.back();
-    }
-  }, [onClose, router]);
+const close = useCallback(() => {
+  if (onClose) {
+    onClose();
+  } else {
+    router.back(); 
+  }
+}, [onClose, router]);
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
         if (event.target === event.currentTarget) {
