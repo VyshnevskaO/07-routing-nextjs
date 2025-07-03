@@ -19,7 +19,7 @@ export default function NoteDetailsClient() {
 
     return (
         
-        <div className={css.container}>
+    <div className={css.container}>
         <div className={css.item}>
           <div className={css.header}>
             <h2>{note.title}</h2>
@@ -28,7 +28,7 @@ export default function NoteDetailsClient() {
           <p className={css.content}>{note.content}</p>
           <p className={css.date}>{note.createdAt}</p>
         </div>
-    </div>
+     </div>
        
     )
 }

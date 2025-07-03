@@ -10,6 +10,7 @@ import SearchBox from "@/components/SearchBox/SearchBox"
 import Pagination from "@/components/Pagination/Pagination"
 import NoteList from "@/components/NoteList/NoteList"
 import type { Note } from "@/types/note";
+import { useParams } from 'next/navigation';
 
 interface FetchNotesResponse {
     notes: Note[];
@@ -17,9 +18,15 @@ interface FetchNotesResponse {
 }
 type NotesClientProps = {
   initialData: FetchNotesResponse;
+
 };
 
 export default function NotesClient({initialData}:NotesClientProps) {
+
+  const params = useParams();
+  const slug = params?.slug as string[] | undefined;
+  const category = !slug || slug[0] === "all" ? undefined : slug[0];
+
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,12 +37,14 @@ export default function NotesClient({initialData}:NotesClientProps) {
   const closeModal = () => setIsModalOpen(false);
 
   const { data } = useQuery({
-    queryKey: ['notesList', currentPage, debouncedSearchQuery],
-    queryFn: () => fetchNotes({ page: currentPage, query: debouncedSearchQuery }),
+    queryKey: ['notesList', currentPage, debouncedSearchQuery, category],
+    queryFn: () => fetchNotes({ page: currentPage, query: debouncedSearchQuery, category }),
     placeholderData: keepPreviousData,
     initialData: currentPage === 1 && debouncedSearchQuery === "" ? initialData : undefined, 
   });
 
+
+  
   const handleInputChange = (value: string) => {
     setSearchQuery(value);      
     setCurrentPage(1);           

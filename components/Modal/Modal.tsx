@@ -54,7 +54,7 @@ const close = useCallback(() => {
               {onClose? (
               <NoteForm onClose={()=> close()} />
               ):(<>{children}
-             <button onClick={close}>Close</button>
+             <button className={css.backBtn} onClick={close}>Close</button>
               </>
                   
               )}

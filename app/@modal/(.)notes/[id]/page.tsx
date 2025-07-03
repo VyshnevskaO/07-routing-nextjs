@@ -1,6 +1,6 @@
 import Modal from "@/components/Modal/Modal";
 import { fetchNoteById } from "@/lib/api";
-
+import css from "./NotePreview.module.css"
 type NotePreviewProps = {
     params: Promise<{id:string}>
 };
@@ -13,11 +13,16 @@ const NotePreview = async({params}:NotePreviewProps) =>{
 
   return(
     <Modal>
-      <h2>{note.title}</h2>
-      <p>{note.content}</p>
-      <p>{note.tag}</p>
-       {note.updatedAt ?
-       (<p>{note.updatedAt}</p>) : <p>{note.createdAt}</p>}
+    <div className={css.container}>
+        <div className={css.item}>
+          <div className={css.header}>
+            <h2>{note.title}</h2>
+          </div>
+          <p className={css.content}>{note.content}</p>
+          <p className={css.tag}>{note.tag}</p>
+          <p className={css.date}>{note.updatedAt? note.updatedAt:note.createdAt}</p>
+        </div>
+     </div>
     </Modal>
   )
 }
