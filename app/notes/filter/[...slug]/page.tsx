@@ -8,10 +8,10 @@ type NotesByCategoryProps = {
 const NotesByCategory = async ({ params }: NotesByCategoryProps) => {
     const { slug } = await params;
     const category = slug[0] === "all" ? undefined : slug[0];
-    const response = await fetchNotes({ page: 1, query: "", category: category });
+    const response = await fetchNotes({ page: 1, query: "", tag: category });
     return (
         <div>
-            <NotesClient initialData={response} />
+            <NotesClient initialData={response} tag={category} />
             {response?.notes?.length > 0 && <NoteList notes={response.notes} />}
         </div>
     )

@@ -4,7 +4,7 @@ import type { Note } from "../types/note";
 interface FetchNotesProps {
     page: number;
   query?: string;
-  category?: string;
+  tag?: string;
 }
 
 interface FetchNotesResponse {
@@ -24,7 +24,7 @@ interface CreateNoteProps {
 
 const API_KEY = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN as string;
 
-export const fetchNotes = async ({ page, query, category }: FetchNotesProps): Promise<FetchNotesResponse> => {
+export const fetchNotes = async ({ page, query, tag }: FetchNotesProps): Promise<FetchNotesResponse> => {
   const url = new URL("https://notehub-public.goit.study/api/notes");
 
     url.searchParams.append("page", `${page}`);
@@ -34,8 +34,8 @@ export const fetchNotes = async ({ page, query, category }: FetchNotesProps): Pr
       url.searchParams.append("search", query);
     }
 
-    if (category) {
-      url.searchParams.append("tag", `${category}`);
+    if (tag) {
+      url.searchParams.append("tag", `${tag}`);
     }
   
     const res = await axios.get<FetchNotesResponse>(`${url}`, {

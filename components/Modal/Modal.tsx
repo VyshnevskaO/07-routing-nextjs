@@ -2,7 +2,6 @@
 import css from "./Modal.module.css"
 import { createPortal } from "react-dom"
 import {useEffect } from "react";
-import NoteForm from "../NoteForm/NoteForm";
 
 
 interface ModalProps {
@@ -41,9 +40,7 @@ export default function Modal({ onClose, children }: ModalProps) {
             aria-modal="true"
             onClick={handleBackdropClick}>
             <div className={css.modal}>
-              {!children ? (
-              <NoteForm onClose={()=> onClose()} />
-              ):(<>{children}</>)} 
+             {children}
             </div>
         </div>,
         document.body

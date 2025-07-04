@@ -26,16 +26,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
   modal: React.ReactNode;
-  
-}>) {
+  }>) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <TanStackProvider>
-        <Header />
+         <Header />
          {modal}
-        {children}
-          <Footer />
+         {children}
+         <Footer />
         </TanStackProvider>
       </body>
     </html>

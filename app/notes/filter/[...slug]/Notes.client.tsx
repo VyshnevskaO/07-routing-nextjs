@@ -10,7 +10,8 @@ import SearchBox from "@/components/SearchBox/SearchBox"
 import Pagination from "@/components/Pagination/Pagination"
 import NoteList from "@/components/NoteList/NoteList"
 import type { Note } from "@/types/note";
-import { useParams } from 'next/navigation';
+import NoteForm from "@/components/NoteForm/NoteForm";
+
 
 interface FetchNotesResponse {
     notes: Note[];
@@ -18,14 +19,12 @@ interface FetchNotesResponse {
 }
 type NotesClientProps = {
   initialData: FetchNotesResponse;
+  tag?:string;
 
 };
 
-export default function NotesClient({initialData}:NotesClientProps) {
+export default function NotesClient({initialData, tag}:NotesClientProps) {
 
-  const params = useParams();
-  const slug = params?.slug as string[] | undefined;
-  const category = !slug || slug[0] === "all" ? undefined : slug[0];
 
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,13 +36,11 @@ export default function NotesClient({initialData}:NotesClientProps) {
   const closeModal = () => setIsModalOpen(false);
 
   const { data } = useQuery({
-    queryKey: ['notesList', currentPage, debouncedSearchQuery, category],
-    queryFn: () => fetchNotes({ page: currentPage, query: debouncedSearchQuery, category }),
+    queryKey: ['notesList', currentPage, debouncedSearchQuery, tag],
+    queryFn: () => fetchNotes({ page: currentPage, query: debouncedSearchQuery, tag }),
     placeholderData: keepPreviousData,
     initialData: currentPage === 1 && debouncedSearchQuery === "" ? initialData : undefined, 
   });
-
-
   
   const handleInputChange = (value: string) => {
     setSearchQuery(value);      
@@ -58,9 +55,9 @@ export default function NotesClient({initialData}:NotesClientProps) {
         <SearchBox value={searchQuery} onChange={handleInputChange} />
         {totalPages > 1 && <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={setCurrentPage} />}
         <button className={css.button} onClick={openModal}>Create note +</button>
-        {isModalOpen && <Modal onClose={closeModal} />}
+        {isModalOpen && (<Modal onClose={closeModal}><NoteForm onClose={closeModal}/></Modal>)}
       </header>
-      {data?.notes && data.notes.length > 0 && <NoteList notes={data.notes} />}
+      {data?.notes && data.notes.length > 0 && <NoteList notes={data.notes}/>}
       </>
   )
 }

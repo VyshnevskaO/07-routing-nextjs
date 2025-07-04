@@ -1,23 +1,27 @@
 'use client'
 import Modal from "@/components/Modal/Modal";
 import css from "./NotePreview.module.css"
-import { Note } from "@/types/note";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { fetchNoteById } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
 
 
-type NotePreviewProps = {
-    note: Note;
-};
-
-const NotePreviewClient = ({note}:NotePreviewProps) =>{
+const NotePreviewClient = () =>{
   const router = useRouter();
-
   const handleGoBack =()=>{
-    const isSure = confirm('Are you sure you want leave the page');
-    if(isSure){
-        router.back();
-    }
+   router.back();
   }
+  const { id } = useParams<{ id: string }>();
+  const idNum = parseInt(id, 10);
+  const { data: note, isLoading, error } = useQuery({
+        queryKey: ['note', idNum],
+        queryFn: () => fetchNoteById(idNum),
+        refetchOnMount: false,
+    
+    });
+
+  if (isLoading) return <p>Loading, please wait...</p>;
+  if (error || !note) return <p>Something went wrong.</p>;  
 
   return(
     <Modal onClose={handleGoBack}>
@@ -28,7 +32,7 @@ const NotePreviewClient = ({note}:NotePreviewProps) =>{
           </div>
           <p className={css.content}>{note.content}</p>
           <p className={css.tag}>{note.tag}</p>
-          <p className={css.date}>{note.updatedAt? note.updatedAt:note.createdAt}</p>
+          <p className={css.date}>{note.createdAt}</p>
           <button className={css.backBtn} onClick={handleGoBack}>Close</button>
         </div>
      </div>
